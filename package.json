@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev":"nodemon index",
+    "dev": "nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ojotaeme",
@@ -12,6 +12,7 @@
   "description": "API for MyNews",
   "dependencies": {
     "express": "^4.21.2",
+    "mongoose": "^8.10.0",
     "nodemon": "^3.1.9"
   }
 }
