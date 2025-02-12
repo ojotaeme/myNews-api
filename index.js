@@ -10,4 +10,4 @@ connectDatabase();
 app.use(express.json());
 app.use("/user", userRoute);
 
-app.listen(port, ()=>console.log(`Server is running in localhost:${port}`));
+app.listen(port, () => console.log(`Server is running in localhost:${port}`));
