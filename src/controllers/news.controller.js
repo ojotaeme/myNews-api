@@ -1,4 +1,4 @@
-import { createService, findAllService, countNews, topNewsService, findByIdService, searchByTitleService, byUserService } from '../services/news.service.js';
+import { createService, findAllService, countNews, topNewsService, findByIdService, searchByTitleService, byUserService, updateService } from '../services/news.service.js';
 
 const create = async (req, res) => {
     try {
@@ -175,11 +175,35 @@ const byUser = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    try {
+        const { title, text, banner } = req.body;
+        const { id } = req.params;
+
+        if (!title && !text && !banner) {
+            res.status(400).send({ message: "Submit at least one field." });
+        }
+
+        const news = await findByIdService(id);
+
+        if (news.user._id != req.userId) {
+            return res.status(400).send({ message: "You didn't create this news" });
+        }
+
+        await updateService(id, title, text, banner);
+
+        return res.send({ message: "News successfully updated" });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
 export {
     create,
     findAll,
     topNews,
     findById,
     searchByTitle,
-    byUser
+    byUser,
+    update
 };
