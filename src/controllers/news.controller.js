@@ -1,4 +1,4 @@
-import { createService, findAllService, countNews, topNewsService, findByIdService, searchByTitleService, byUserService, updateService } from '../services/news.service.js';
+import { createService, findAllService, countNews, topNewsService, findByIdService, searchByTitleService, byUserService, updateService, eraseService } from '../services/news.service.js';
 
 const create = async (req, res) => {
     try {
@@ -103,7 +103,7 @@ const topNews = async (req, res) => {
         const news = await topNewsService();
 
         if (!news) {
-            return res.status(400).send({ message: "There is no news available" });
+            return res.status(400).send({ message: "There is no news available." });
         }
 
         res.send({
@@ -131,7 +131,7 @@ const searchByTitle = async (req, res) => {
         const news = await searchByTitleService(title);
 
         if (news.length === 0) {
-            return res.status(400).send({ message: "There are no posts with this title" });
+            return res.status(400).send({ message: "There are no posts with this title." });
         }
 
         return res.send({
@@ -187,12 +187,29 @@ const update = async (req, res) => {
         const news = await findByIdService(id);
 
         if (news.user._id != req.userId) {
-            return res.status(400).send({ message: "You didn't create this news" });
+            return res.status(400).send({ message: "You didn't create this news." });
         }
 
         await updateService(id, title, text, banner);
 
-        return res.send({ message: "News successfully updated" });
+        return res.send({ message: "News successfully updated." });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+const erase = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const news = await findByIdService(id);
+
+        if (news.user._id != req.userId) {
+            return res.status(400).send({ message: "You didn't create this news." });
+        }
+
+        await eraseService(id);
+        return res.send({ message: "News deleted successfully." });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
@@ -205,5 +222,6 @@ export {
     findById,
     searchByTitle,
     byUser,
-    update
+    update,
+    erase
 };

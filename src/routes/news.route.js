@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { create, findAll, topNews, findById, searchByTitle, byUser, update } from '../controllers/news.controller.js'
 import { authMiddleware } from '../middlewares/auth.middlewares.js';
+import { create, findAll, topNews, findById, searchByTitle, byUser, update, erase } from '../controllers/news.controller.js'
 
 const route = Router();
 
@@ -11,5 +11,6 @@ route.get("/search", searchByTitle);
 route.get("/byUser", authMiddleware, byUser);
 route.get("/:id", authMiddleware, findById);
 route.patch("/:id", authMiddleware, update);
+route.delete("/:id", authMiddleware, erase);
 
 export default route;
