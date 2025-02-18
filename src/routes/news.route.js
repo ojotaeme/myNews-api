@@ -9,7 +9,9 @@ import {
     byUser,
     update,
     erase,
-    likeNews
+    likeNews,
+    addComment,
+    deleteComment
 } from '../controllers/news.controller.js'
 
 const route = Router();
@@ -22,6 +24,8 @@ route.get("/byUser", authMiddleware, byUser);
 route.get("/:id", authMiddleware, findById);
 route.patch("/:id", authMiddleware, update);
 route.delete("/:id", authMiddleware, erase);
-route.patch("/like/:id", authMiddleware, likeNews)
+route.patch("/like/:id", authMiddleware, likeNews);
+route.patch("/comment/:id", authMiddleware, addComment);
+route.patch("/comment/:idNews/:idComment", authMiddleware, deleteComment)
 
 export default route;

@@ -9,7 +9,9 @@ import {
     updateService,
     eraseService,
     likeNewsService,
-    deleteLikeNewsService
+    deleteLikeNewsService,
+    addCommentService,
+    deleteCommentService
 } from '../services/news.service.js';
 
 const create = async (req, res) => {
@@ -245,6 +247,42 @@ const likeNews = async (req, res) => {
     }
 }
 
+const addComment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.userId;
+        const { comment } = req.body;
+
+        if (!comment) {
+            return res.status(400).send({ message: "Comment field empty" });
+        }
+
+        await addCommentService(id, userId, comment);
+        res.send({ message: "Comment done successfully" });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+const deleteComment = async (req, res) => {
+    try {
+        const { idNews, idComment } = req.params;
+        const userId = req.userId;
+
+        const commentedDeleted = await deleteCommentService(idNews, idComment, userId);
+
+        const commentFilter = commentedDeleted.comments.find(comment=>comment.idComment === idComment);
+
+        if (commentFilter.comments.userId !== userId) {
+            return res.status(400).send({ message: "You can't delete this comment" });
+        }
+
+        res.send({ message: "Comment removed successfully." });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
 export {
     create,
     findAll,
@@ -254,5 +292,7 @@ export {
     byUser,
     update,
     erase,
-    likeNews
+    likeNews,
+    addComment,
+    deleteComment
 };
